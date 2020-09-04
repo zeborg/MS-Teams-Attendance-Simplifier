@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, url_for
+from flask import Flask, render_template, url_for
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import SubmitField
@@ -79,5 +79,9 @@ def home():
 
     return render_template('home.html', res=res, res_len=range(len(res)), form=csv_form, formsub=disp_table, url_for=url_for)
 
-app.run(debug=True)
+port = int(os.environ.get('PORT', 5000))
+
+if __name__ == '__main__':
+	app.run(threaded=True, port=port)
+
 
