@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, flash, url_for
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import SubmitField
@@ -10,7 +10,7 @@ def fetch(FN):
     def time(t):
         time = t
         y = t.strip().split(':')
-        total = float(y[0])*3600+float(y[1])*60+float(y[2])
+        total = float(y[0])*3600+float(y[1])*60+float(y[2].split()[0])
         return total/60
 
     if FN:
@@ -18,10 +18,11 @@ def fetch(FN):
             content = csv.reader(csvf)
             members = dict()
             c = False
-            last = None
             for row in content:
+                last = row[-1]
                 if c:
                     k = row[0].split('\t')
+                    print(k)
                     if k[1] == 'Joined':
                         if k[0] not in members:
                             members[k[0]] = [row[-1], 0, True]
@@ -35,7 +36,7 @@ def fetch(FN):
                             members[k[0]][1] = members[k[0]][1] + time(row[-1])-time(members[k[0]][0])
                             members[k[0]][2] = False
                 c = True       
-                last = row[-1]
+                if last < row[-1]: last = row[-1]
 
             for key in members:
                 if members[key][2]:
@@ -78,8 +79,5 @@ def home():
 
     return render_template('home.html', res=res, res_len=range(len(res)), form=csv_form, formsub=disp_table, url_for=url_for)
 
-port = int(os.environ.get('PORT', 5000))
-
-if __name__ == '__main__':
-	app.run(threaded=True, port=port)
+app.run(debug=True)
 
