@@ -80,5 +80,5 @@ def home():
 
 port = int(os.environ.get('PORT', 5000))
 
-app.run(threaded=True, port=5000)
+app.run(threaded=True, port=port)
 
