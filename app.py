@@ -78,5 +78,5 @@ def home():
 
     return render_template('home.html', res=res, res_len=range(len(res)), form=csv_form, formsub=disp_table, url_for=url_for)
 
-app.run(debug=True)
+app.run(threaded=True, port=5000)
 
